@@ -2,9 +2,13 @@ module MDPs
     export AbstractMDP,
            MDP,
            SparseMDP,
+           bellman!,
            is_square_stochastic,
            ismdp,
-           randmdp
+           policy,
+           randmdp,
+           value,
+           value_iteration!
 
     include("abstractmdp.jl")
     include("examples.jl")
