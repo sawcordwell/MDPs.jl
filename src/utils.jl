@@ -1,27 +1,7 @@
 
-rowsumone{T<:FloatingPoint}(M::AbstractArray{T,2}) =
-    all( abs( sum(M, 2) .- ones(T, size(M)[1]) ) .<= 2eps(T))
-
-function is_square_stochastic{T<:FloatingPoint}(M::AbstractArray{T,2})
-    r, c = size(M)
-    return (r == c) && rowsumone(M)
-end
-
-function is_square_stochastic{T<:FloatingPoint}(A::AbstractArray{T,3})
-    # number of rows (r), columns (c) and layers (l)
-    r, c, l = size(A)
-    # Check that the matrices are square (the number of columns equals the
-    # number of rows)
-    if r != c
-        return false
-    end
-    # Check that each matrix is stochastic (all rows sum to one)
-    for k in range(1, l)
-        if !rowsumone(A[:, :, k])
-            return false
-        end
-    end
-    true
+function is_square_stochastic{T<:FloatingPoint}(A::AbstractArray{T})
+    r, c = size(A)[1:2]
+    return (r == c) && all(abs(sum(A, 2) .- 1) .<= 10eps(T))
 end
 
 function ismdp{P<:FloatingPoint,R<:Real}(transition::AbstractArray{P,3}, reward::AbstractArray{R,1})
