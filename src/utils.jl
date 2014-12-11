@@ -1,11 +1,50 @@
+@doc """
+Check that a matrix is square and column-stochastic.
 
-function is_square_stochastic{T<:FloatingPoint}(A::AbstractArray{T})
-    r, c = size(A)[1:2]
-    return (r == c) && all(abs(sum(A, 2) .- 1) .<= 10eps(T))
+# Arguments
+
+* `M::AbstractMatrix`: Column-stochastic square matrix.
+
+# Returns
+
+`true` if M is square and column-stochastic, `false` otherwise.
+
+""" ->
+function is_square_stochastic{T<:FloatingPoint}(M::AbstractMatrix{T})
+  r, c = size(M)
+  r == c || return false
+  for j = 1:c
+    S = zero(T)
+    @simd for i = 1:r
+      @inbounds S += M[i, j]
+    end
+    x = S < one(T) ? one(T) : S
+    abs(S - one(T)) < 5eps(x) || return false
+  end
+  true
+end
+
+@doc """
+Check that the matrices along the third axis are square and column-stochastic.
+
+# Arguments
+
+* `A::AbstractMatrix`: Column-stochastic square matrices.
+
+# Returns
+
+`true` if A is square and column-stochastic, `false` otherwise.
+
+""" ->
+function is_square_stochastic{T}(A::AbstractArray{T,3})
+  for k = 1:size(A)[3]
+    is_square_stochastic(A[:, :, k]) || return false
+  end
+  true
 end
 
 function ismdp{P<:FloatingPoint,R<:Real}(transition::AbstractArray{P,3}, reward::AbstractArray{R,1})
-    # number of rows, columns and actions according to the transition 
+    # number of rows, columns and actions according to the transition
     # probability matrix
     ST = size(transition)[1]
     # number of states according to reward vector
@@ -21,8 +60,7 @@ function ismdp{P<:FloatingPoint,R<:Real}(transition::AbstractArray{P,3}, reward:
 end
 
 function ismdp{P<:FloatingPoint,R<:Real}(transition::AbstractArray{P,3}, reward::AbstractArray{R,3})
-    ST1, ST2, AT = size(transition)
-    SR1, SR2, AR = size(reward)
-    return (ST1 == SR1) && (ST2 == SR2) && (AT == AR) && is_square_stochastic(transition)
+    S1T, S2T, AT = size(transition)
+    S1R, S2R, AR = size(reward)
+    return (S1T == S1R) && (S2T == S2R) && (AT == AR) && is_square_stochastic(transition)
 end
-

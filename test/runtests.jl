@@ -1,6 +1,5 @@
 using MDPs
 using Base.Test
 
-# write your own tests here
+include("bellman.jl")
 include("randmdp.jl")
-
