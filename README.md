@@ -54,8 +54,8 @@ transition probability matrices for each action. Each transition
 probability matrix of `P` must be square and column-stochastic, which
 means that the number of rows equals the number of columns and that each
 column must sum to one. Specifically they currently should sum to within
-about `1.1102230246251565e-15` of `1.0` when using `Float64` or
-`5.9604645f-7` when using `Float32` values. This may be too strict for
+about `2.220446049250313e-15` of `1.0` when using `Float64` or
+`1.1920929f-6` when using `Float32` values. This may be too strict for
 some purposes, so please file an issue is this is affecting you.
 
 `R` is the array of reward vectors. It can either be a one-dimensional

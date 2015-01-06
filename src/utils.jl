@@ -13,13 +13,14 @@ Check that a matrix is square and column-stochastic.
 function is_square_stochastic{T<:FloatingPoint}(M::AbstractMatrix{T})
   r, c = size(M)
   r == c || return false
+  eps_multiplier = 10
   for j = 1:c
     S = zero(T)
     @simd for i = 1:r
       @inbounds S += M[i, j]
     end
     x = S < one(T) ? one(T) : S
-    abs(S - one(T)) < 5eps(x) || return false
+    abs(S - one(T)) < eps_multiplier*eps(x) || return false
   end
   true
 end
