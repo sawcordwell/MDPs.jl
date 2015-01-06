@@ -17,14 +17,15 @@ Pkg.clone("https://github.com/sawcordwell/MDPs.jl.git")
 
 ## Quick Use
 
-So far only an MDP type, the Bellman operator and a few support
-functions are implemented:
+So far only a dense MDP type and the value iteration algorithm have been implemented.
+A basic usage could look like this:
 
 ```julia
 using MDPs
-P, R = randmdp(10, 3)
+P, R = randmdp(10, 3) # A random MDP with 10 states and 3 actions
 mdp = MDP(P, R)
-bellman!(mdp, 0.9)
+value_iteration!(mdp, 0.9)
+policy(mdp)
 ```
 
 ## Documentation
@@ -33,11 +34,12 @@ The documentation is here for now until it becomes more complete.
 
 ### Types
 
-There are currently three types:
+There are currently four types:
 
-* `AbstractMDP` - the abstract base type for all MDP types.
-* `MDP` - the default dense MDP type.
-* `QMDP` - a dense MDP type that stores the full state-action value function.
+* `AbstractMDP`: the abstract base type for all MDP types.
+* `DenseMDP`: the base abstract type for dense MDPs.
+* `MDP`: the default dense MDP type.
+* `QMDP`: a dense MDP type that stores the full state-action value function.
 
 Let `S` be the number of states in the MDP and `A` be the number of
 actions, then the easiest way to construct the `MDP` or `QMDP` type is
@@ -67,15 +69,16 @@ above.
 
 These are the current functions:
 
-* `bellman` - the Bellman operator.
-* `bellman!` - the in-place Bellman operator.
-* `is_square_stochastic` - checks that `P` is sqaure-stochastic.
-* `ismdp` - checks that `P` and `R` describe a valid MDP
-* `policy` - gets the current policy from the MDP
-* `randmdp` - generates a random `P` and `R` that is a valid MDP
-* `reset!` - resets an MDP to its original state
-* `smallmdp` - generates a small example for `P` and `R`
-* `value` - gets the value vector of the MDP
+* `bellman`: the Bellman operator.
+* `bellman!`: the in-place Bellman operator.
+* `is_square_stochastic`: checks that `P` is sqaure-stochastic.
+* `ismdp`: checks that `P` and `R` describe a valid MDP.
+* `policy`: gets the current policy from the MDP.
+* `randmdp`: generates a random `P` and `R` that is a valid MDP.
+* `reset!`: resets an MDP to its original state.
+* `smallmdp`: generates a small example for `P` and `R`.
+* `value`: gets the value vector of the MDP.
+* `value_iteration!`: the value iteration algorithm.
 
 For more information please check the docstrings and source code for now.
 
