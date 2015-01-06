@@ -21,6 +21,9 @@ type MDP{P,R,V<:FloatingPoint,A<:Integer} <: DenseMDP{P,R}
   n_actions::Int
 end
 
+# Constructors
+# ------------
+
 function MDP{P,R,V,A}(transition::Array{P,3},
                       reward::Union(Vector{R},Array{R,2}),
                       value::Vector{V},
@@ -53,6 +56,9 @@ MDP{P,R,V}(transition::Array{P,3}, reward::Union(Vector{R},Array{R,2}),
 MDP{P,R}(transition::Array{P,3}, reward::Union(Vector{R},Array{R,2})) =
   MDP(transition, reward, Float64, Int64)
 
+# Accessors
+# ---------
+
 value(mdp::MDP) = mdp.value
 policy(mdp::MDP) = mdp.policy
 
@@ -68,9 +74,55 @@ function reset!{P,R,V,A}(mdp::MDP{P,R,V,A})
   nothing
 end
 
+# Methods
+# -------
+
 bellman!{P,R,V,A}(mdp::MDP{P,R,V,A}, δ::Float64) =
   bellman!(mdp.value, mdp.policy, mdp.value_prev, mdp.transition,
            mdp.reward, δ)
+
+@doc """
+# Value iteration algorithm from Bellman 1957 "A Markovian decision process."
+
+## Arguments
+
+* `mdp::MDP{P,R,V}`: The Markov decision process of type MDP.
+* `δ::Float64`: The discount factor, 0 < discount ≤ 1.
+* `ϵ::Float64`: The epsilon-optimal stopping value. Drfault: 0.01
+* `max_iter::Int`: The maximum number of iterations. Default: 1000.
+
+## Returns
+
+* `policy::Vector{A}`: The ϵ-optimal policy vector.
+* 'value::Vector{V}`: The ϵ-optimal value vector.
+
+""" ->
+function value_iteration!{P,R,V,A}(mdp::MDP{P,R,V,A}, δ::Float64;
+                                   ϵ::Float64=0.01, max_iter::Int=1000)
+  @assert 0 < δ <= 1 "ERROR: δ not in interval (0, 1]"
+  @assert ϵ > 0 "ERROR: ϵ not greater than 0"
+  @assert max_iter > 0 "ERROR: max_iter not greater than 0"
+  # Calculate the stopping threshold
+  if δ < 1.0
+    threshold = ϵ*(1.0 - δ)/δ
+  else
+    threshold = ϵ
+  end
+  # Find the ϵ-optimal value function
+  itr = 0
+  while true
+    itr += 1
+    bellman!(mdp, δ)
+    if span(mdp.value - mdp.value_prev) < threshold
+      break
+    elseif itr == max_iter
+      println("WARNING: Reached maximum number of iterations, ϵ-optimal ",
+              "policy not found.")
+      break
+    end
+    copy!(mdp.value_prev, mdp.value)
+  end
+end
 
 # ---------------------------------------
 # A dense type that stores the q-function
@@ -117,6 +169,13 @@ policy{A}(::Type{A}, mdp::QMDP) = A[ indmax(mdp.q[s, :]) for s = 1:mdp.n_states 
 
 value{P,R,V}(mdp::QMDP{P,R,V}) = V[ maximum(mdp.q[s, :]) for s = 1:mdp.n_states ]
 
+function value!{P,R,V}(value::Vector{V}, mdp::QMDP{P,R,V})
+  @assert length(value) == mdp.n_states
+  @inbounds for s = 1:mdp.n_states
+    value[s] = convert(V, maximum(mdp.q[s, :]))
+  end
+end
+
 # Methods
 # -------
 
@@ -132,3 +191,49 @@ value{P,R,V}(mdp::QMDP{P,R,V}) = V[ maximum(mdp.q[s, :]) for s = 1:mdp.n_states 
 """ ->
 bellman!{P,R,V}(mdp::QMDP{P,R,V}, value::Vector{V}, δ::Float64) =
   bellman!(mdp.q, value, mdp.transition, mdp.reward, δ)
+
+@doc """
+# Value iteration algorithm from Bellman 1957 "A Markovian decision process."
+
+## Arguments
+
+* `mdp::QMDP{P,R,V}`: The Markov decision process of type MDP.
+* `δ::Float64`: The discount factor, 0 < discount ≤ 1.
+* `ϵ::Float64`: The epsilon-optimal stopping value. Drfault: 0.01
+* `max_iter::Int`: The maximum number of iterations. Default: 1000.
+
+## Returns
+
+* `policy::Vector{A}`: The ϵ-optimal policy vector.
+* 'value::Vector{V}`: The ϵ-optimal value vector.
+
+""" ->
+function value_iteration!{P,R,V}(mdp::QMDP{P,R,V}, δ::Float64;
+                                 ϵ::Float64=0.01, max_iter::Int=1000)
+  @assert 0 < δ <= 1 "ERROR: δ not in interval (0, 1]"
+  @assert ϵ > 0 "ERROR: ϵ not greater than 0"
+  @assert max_iter > 0 "ERROR: max_iter not greater than 0"
+  # Calculate the stopping threshold
+  if δ < 1.0
+    threshold = ϵ*(1.0 - δ)/δ
+  else
+    threshold = ϵ
+  end
+  # Find the ϵ-optimal value function
+  itr = 0
+  val = zeros(V, mdp.n_states)
+  val_prev = copy(val)
+  while true
+    itr += 1
+    bellman!(mdp, val, δ)
+    value!(val, mdp)
+    if span(val - val_prev) < threshold
+      break
+    elseif itr == max_iter
+      println("WARNING: Reached maximum number of iterations, ϵ-optimal ",
+              "policy not found.")
+      break
+    end
+    copy!(val_prev, val)
+  end
+end
