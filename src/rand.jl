@@ -1,5 +1,5 @@
 
-function randmdp(s::Int, a::Int, mask::AbstractArray{Bool,3})
+function randmdp(s, a, mask::AbstractArray{Bool,3})
   @assert all(sum(mask,2) .> 0) "All rows of mask must have at least one 'true' value"
   @assert size(mask) == (s, s, a) "Mask must be s × s × a size"
   P = rand(s, s, a)
@@ -12,7 +12,7 @@ function randmdp(s::Int, a::Int, mask::AbstractArray{Bool,3})
   (P, R)
 end
 
-function randmdp(s::Int, a::Int, mask::AbstractArray{Bool,2})
+function randmdp(s, a, mask::AbstractArray{Bool,2})
   @assert all(sum(mask,2) .> 0) "All rows of mask must have at least one 'true' value"
   @assert size(mask) == (s, s) "Mask must be s × a size"
   P = rand(s, s, a)
@@ -28,7 +28,7 @@ function randmdp(s::Int, a::Int, mask::AbstractArray{Bool,2})
 end
 
 
-function randmdp{P<:FloatingPoint,R<:FloatingPoint}(::Type{P}, ::Type{R}, s::Int, a::Int)
+function randmdp{P<:FloatingPoint,R<:FloatingPoint}(::Type{P}, ::Type{R}, s, a)
   transition = rand(P, s, s, a)
   # Make each row of ``P`` sum to 1
   transition = transition ./ sum(transition, 1)
@@ -37,4 +37,4 @@ function randmdp{P<:FloatingPoint,R<:FloatingPoint}(::Type{P}, ::Type{R}, s::Int
   (transition, reward)
 end
 
-randmdp(s::Int, a::Int) = randmdp(Float64, Float64, s, a)
+randmdp(s, a) = randmdp(Float64, Float64, s, a)

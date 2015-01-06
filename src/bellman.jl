@@ -1,6 +1,6 @@
 
-function update_value{P,R,V}(s::Int, j::Int, k::Int, transition::Array{P,3},
-                             value::Vector{V}, reward::R, δ::Float64)
+function update_value{P,R,V}(s, j, k, transition::Array{P,3}, value::Vector{V},
+                             reward::R, δ)
   Σ = zero(V)
   @simd for i = 1:s
     @inbounds Σ += convert(V, transition[i, j, k] * value[i])
@@ -32,16 +32,14 @@ and reward arrays. Consider using one of the MDP types instead.
 
 """ ->
 function bellman!{P,R,V}(Q::Array{V,2}, value::Vector{V},
-                         transition::Array{P,3}, reward::Array{R,2},
-                         δ::Float64)
+                         transition::Array{P,3}, reward::Array{R,2}, δ)
   s1, s2, a = size(transition)
   @assert length(value) == s1
   @assert size(reward) == (s2, a)
   @assert size(Q) == (s2, a)
   @inbounds for k = 1:a
     for j = 1:s2
-      Q[j, k] = update_value(s1, j, k, transition, value,
-                                       reward[j, k], δ)
+      Q[j, k] = update_value(s1, j, k, transition, value, reward[j, k], δ)
     end
   end
   return Q
@@ -71,8 +69,7 @@ and reward arrays. Consider using one of the MDP types instead.
 
 """ ->
 function bellman!{P,R,V}(Q::Array{V,2}, value::Vector{V},
-                         transition::Array{P,3}, reward::Vector{R},
-                         δ::Float64)
+                         transition::Array{P,3}, reward::Vector{R}, δ)
   s1, s2, a = size(transition)
   @assert length(value) == s1
   @assert length(reward) == s2
@@ -90,7 +87,7 @@ Updates value and policy inline
 """ ->
 function bellman!{P,R,V,A}(value::Vector{V}, policy::Vector{A},
                            value_prev::Vector{V}, transition::Array{P,3},
-                           reward::Array{R,2}, δ::Float64)
+                           reward::Array{R,2}, δ)
   s1, s2, a = size(transition)
   @assert s1 == length(value) == length(value_prev)
   @assert size(reward) == (s2, a)
@@ -111,7 +108,7 @@ Updates value and policy inline: vector reward
 """ ->
 function bellman!{P,R,V,A}(value::Vector{V}, policy::Vector{A},
                            value_prev::Vector{V}, transition::Array{P,3},
-                           reward::Vector{R}, δ::Float64)
+                           reward::Vector{R}, δ)
   s1, s2, a = size(transition)
   @assert s1 == length(value) == length(value_prev)
   @assert length(reward) == s2
@@ -148,8 +145,9 @@ A tuple of the new value vector and, optionaly, the policy.
 
 """ ->
 function bellman{P,R,V}(value::Array{V,1}, transition::Array{P,3},
-                        reward::Union(Vector{R},Array{R,2}), δ::Float64;
-                        policy::Bool=false)
+                        reward::Union(Vector{R},Array{R,2}), δ;
+                        policy=false)
+  @assert 0 < δ <= 1 "ERROR: δ not in interval (0, 1]"
   ismdp(transition, reward) || error("Not a valid MDP.")
   s1, s2, a = size(transition)
   Q = bellman!(Array(V, s2, a), value, transition, reward, δ)
@@ -164,8 +162,9 @@ end
 Modfies value in-place.
 """ ->
 function bellman!{P,R,V}(value::Array{V,1}, transition::Array{P,3},
-                         reward::Union(Vector{R},Array{R,2}), δ::Float64;
-                         policy::Bool=false)
+                         reward::Union(Vector{R},Array{R,2}), δ;
+                         policy=false)
+  @assert 0 < δ <= 1 "ERROR: δ not in interval (0, 1]"
   ismdp(transition, reward) || error("Not a valid MDP.")
   s1, s2, a = size(transition)
   Q = bellman!(Array(V, s2, a), value, transition, reward, δ)
@@ -181,5 +180,4 @@ function bellman!{P,R,V}(value::Array{V,1}, transition::Array{P,3},
       value[i] = maximum(Q[i, :])
     end
   end
-  return value
 end

@@ -27,11 +27,11 @@ policy_expected = [2, 1]
 value_expected = [117.84153597421569, 111.72677122062753]
 
 mdp = MDP(P, R)
-value_iteration!(mdp, 1.0)
+value_iteration!(mdp, 1)
 @test policy(mdp) == policy_expected
 @test_approx_eq value(mdp) value_expected
 
 mdp = QMDP(P, R)
-value_iteration!(mdp, 1.0)
+value_iteration!(mdp, 1)
 @test policy(mdp) == policy_expected
 @test_approx_eq value(mdp) value_expected

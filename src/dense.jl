@@ -3,7 +3,7 @@
 # --------------
 
 # Checks that arguments are in range and computes the threshold
-function vi_check(δ::Float64, ϵ::Float64, max_iter::Int)
+function vi_check(δ, ϵ, max_iter)
   @assert 0 < δ <= 1 "ERROR: δ not in interval (0, 1]"
   @assert ϵ > 0 "ERROR: ϵ not greater than 0"
   @assert max_iter > 0 "ERROR: max_iter not greater than 0"
@@ -95,7 +95,7 @@ end
 # Methods
 # -------
 
-bellman!{P,R,V,A}(mdp::MDP{P,R,V,A}, δ::Float64) =
+bellman!{P,R,V,A}(mdp::MDP{P,R,V,A}, δ) =
   bellman!(mdp.value, mdp.policy, mdp.value_prev, mdp.transition,
            mdp.reward, δ)
 
@@ -115,8 +115,7 @@ bellman!{P,R,V,A}(mdp::MDP{P,R,V,A}, δ::Float64) =
 * 'value::Vector{V}`: The ϵ-optimal value vector.
 
 """ ->
-function value_iteration!{P,R,V,A}(mdp::MDP{P,R,V,A}, δ::Float64;
-                                   ϵ::Float64=0.01, max_iter::Int=1000)
+function value_iteration!{P,R,V,A}(mdp::MDP{P,R,V,A}, δ; ϵ=0.01, max_iter=1000)
   threshold = vi_check(δ, ϵ, max_iter)
   # Find the ϵ-optimal value function
   itr = 0
@@ -199,7 +198,7 @@ end
 * `δ::Float64`: The discount factor, 0 < discount ≤ 1
 
 """ ->
-bellman!{P,R,V}(mdp::QMDP{P,R,V}, value::Vector{V}, δ::Float64) =
+bellman!{P,R,V}(mdp::QMDP{P,R,V}, value::Vector{V}, δ) =
   bellman!(mdp.q, value, mdp.transition, mdp.reward, δ)
 
 @doc """
@@ -218,8 +217,7 @@ bellman!{P,R,V}(mdp::QMDP{P,R,V}, value::Vector{V}, δ::Float64) =
 * 'value::Vector{V}`: The ϵ-optimal value vector.
 
 """ ->
-function value_iteration!{P,R,V}(mdp::QMDP{P,R,V}, δ::Float64;
-                                 ϵ::Float64=0.01, max_iter::Int=1000)
+function value_iteration!{P,R,V}(mdp::QMDP{P,R,V}, δ; ϵ=0.01, max_iter=1000)
   threshold = vi_check(δ, ϵ, max_iter)
   # Find the ϵ-optimal value function
   itr = 0
