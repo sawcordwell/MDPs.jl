@@ -29,7 +29,7 @@ bellman!(mdp, 0.9)
 
 ## Documentation
 
-The full documentation is here for now until it becomes more complete.
+The documentation is here for now until it becomes more complete.
 
 ### Types
 
@@ -87,4 +87,4 @@ Please file and issues or feature requests through the GitHub
 ## License
 
 The package is licensed under the terms of the MIT "Expat" License. See
-[LICENSE.txt](LICENSE.txt) for details.
+[LICENSE.md](LICENSE.md) for details.
