@@ -1,7 +1,7 @@
 # MDPs
 
 [![Build Status](https://travis-ci.org/sawcordwell/MDPs.jl.svg?branch=master)](https://travis-ci.org/sawcordwell/MDPs.jl)
-[![Coverage Status](https://coveralls.io/repos/sawcordwell/MDPs.jl/badge.png)](https://coveralls.io/r/sawcordwell/MDPs.jl)
+[![Coverage Status](https://coveralls.io/repos/sawcordwell/MDPs.jl/badge.png?branch=master)](https://coveralls.io/r/sawcordwell/MDPs.jl?branch=master)
 
 *MDPs* is a [Julia](www.julialang.org) package for working with Markov
 decision processes (MDPs).
