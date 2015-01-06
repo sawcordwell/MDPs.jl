@@ -12,7 +12,7 @@ decision processes (MDPs).
 REPL via:
 
 ```julia
-Pkg.add("https://github.com/sawcordwell/MDPs.jl.git")
+Pkg.clone("https://github.com/sawcordwell/MDPs.jl.git")
 ```
 
 ## Quick Use
