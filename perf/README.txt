@@ -1,0 +1,1 @@
+This directory contains Julia scripts that test different variations of functions to find which are the most performant Each must be run individually by passing it to the Julia interpretor e.g. `julia bellman.jl`.
