@@ -69,10 +69,10 @@ MDP{P,R,V,A}(transition::Array{P,3}, reward::Union(Vector{R},Array{R,2}),
 
 MDP{P,R,V}(transition::Array{P,3}, reward::Union(Vector{R},Array{R,2}),
            initial_value::Vector{V}) =
-  MDP(transition, reward, initial_value, Int64)
+  MDP(transition, reward, initial_value, Int)
 
 MDP{P,R}(transition::Array{P,3}, reward::Union(Vector{R},Array{R,2})) =
-  MDP(transition, reward, Float64, Int64)
+  MDP(transition, reward, Float64, Int)
 
 # Accessors
 # ---------
