@@ -1,3 +1,21 @@
+# --------------
+# Helper methods
+# --------------
+
+# Checks that arguments are in range and computes the threshold
+function vi_check(δ::Float64, ϵ::Float64, max_iter::Int)
+  @assert 0 < δ <= 1 "ERROR: δ not in interval (0, 1]"
+  @assert ϵ > 0 "ERROR: ϵ not greater than 0"
+  @assert max_iter > 0 "ERROR: max_iter not greater than 0"
+  # Calculate the stopping threshold
+  if δ < 1.0
+    threshold = ϵ*(1.0 - δ)/δ
+  else
+    threshold = ϵ
+  end
+  threshold
+end
+
 # --------------------------------------------------
 # Methods that should work for all types of DenseMDP
 # --------------------------------------------------
@@ -99,15 +117,7 @@ bellman!{P,R,V,A}(mdp::MDP{P,R,V,A}, δ::Float64) =
 """ ->
 function value_iteration!{P,R,V,A}(mdp::MDP{P,R,V,A}, δ::Float64;
                                    ϵ::Float64=0.01, max_iter::Int=1000)
-  @assert 0 < δ <= 1 "ERROR: δ not in interval (0, 1]"
-  @assert ϵ > 0 "ERROR: ϵ not greater than 0"
-  @assert max_iter > 0 "ERROR: max_iter not greater than 0"
-  # Calculate the stopping threshold
-  if δ < 1.0
-    threshold = ϵ*(1.0 - δ)/δ
-  else
-    threshold = ϵ
-  end
+  threshold = vi_check(δ, ϵ, max_iter)
   # Find the ϵ-optimal value function
   itr = 0
   while true
@@ -210,15 +220,7 @@ bellman!{P,R,V}(mdp::QMDP{P,R,V}, value::Vector{V}, δ::Float64) =
 """ ->
 function value_iteration!{P,R,V}(mdp::QMDP{P,R,V}, δ::Float64;
                                  ϵ::Float64=0.01, max_iter::Int=1000)
-  @assert 0 < δ <= 1 "ERROR: δ not in interval (0, 1]"
-  @assert ϵ > 0 "ERROR: ϵ not greater than 0"
-  @assert max_iter > 0 "ERROR: max_iter not greater than 0"
-  # Calculate the stopping threshold
-  if δ < 1.0
-    threshold = ϵ*(1.0 - δ)/δ
-  else
-    threshold = ϵ
-  end
+  threshold = vi_check(δ, ϵ, max_iter)
   # Find the ϵ-optimal value function
   itr = 0
   val = zeros(V, mdp.n_states)
