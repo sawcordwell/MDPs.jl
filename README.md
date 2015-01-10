@@ -39,6 +39,7 @@ There are currently four types:
 * `AbstractMDP`: the abstract base type for all MDP types.
 * `DenseMDP`: the base abstract type for dense MDPs.
 * `MDP`: the default dense MDP type.
+* `POMDP`: a partially observable MDP.
 * `QMDP`: a dense MDP type that stores the full state-action value function.
 
 Let `S` be the number of states in the MDP and `A` be the number of

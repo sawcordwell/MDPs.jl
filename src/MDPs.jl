@@ -8,6 +8,7 @@ export AbstractMDP,
        DenseMDP,
        QMDP,
        MDP,
+       POMDP,
        bellman,
        bellman!,
        is_square_stochastic,
@@ -22,6 +23,7 @@ include("abstract.jl")
 include("bellman.jl")
 include("dense.jl")
 include("examples.jl")
+include("pomdp.jl")
 include("utils.jl")
 
 end # module
