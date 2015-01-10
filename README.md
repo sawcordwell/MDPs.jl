@@ -12,7 +12,7 @@ decision processes (MDPs).
 REPL via:
 
 ```julia
-Pkg.clone("https://github.com/sawcordwell/MDPs.jl.git")
+Pkg.add("MDPs")
 ```
 
 ## Quick Use
@@ -81,6 +81,10 @@ These are the current functions:
 * `value_iteration!`: the value iteration algorithm.
 
 For more information please check the docstrings and source code for now.
+
+### References
+
+Bellman R, 1957, [A Markovian Decision Process](http://www.iumj.indiana.edu/IUMJ/FULLTEXT/1957/6/56038), _Journal of Mathematics and Mechanics_, vol. 6, no. 5, pp. 679–684.
 
 ## Support
 
