@@ -2,7 +2,7 @@
 # Small test
 # ----------
 
-P, R = smallmdp()
+P, R = MDPs.Examples.small()
 value_initial = [0.5, 0.5]
 value_expected = [10.45, 2.45]
 discount = 0.9

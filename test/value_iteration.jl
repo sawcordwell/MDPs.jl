@@ -2,7 +2,7 @@
 # Small test
 # ----------
 
-P, R = smallmdp()
+P, R = MDPs.Examples.small()
 
 # Discounted
 # ----------

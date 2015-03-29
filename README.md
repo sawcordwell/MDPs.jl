@@ -22,7 +22,7 @@ A basic usage could look like this:
 
 ```julia
 using MDPs
-P, R = randmdp(10, 3) # A random MDP with 10 states and 3 actions
+P, R = MDPs.Examples.random(10, 3) # A random MDP with 10 states and 3 actions
 mdp = MDP(P, R)
 value_iteration!(mdp, 0.9)
 policy(mdp)
@@ -67,18 +67,21 @@ above.
 
 ### Functions
 
-These are the current functions:
+These are the currently exported functions:
 
 * `bellman`: the Bellman operator.
 * `bellman!`: the in-place Bellman operator.
 * `is_square_stochastic`: checks that `P` is sqaure-stochastic.
 * `ismdp`: checks that `P` and `R` describe a valid MDP.
 * `policy`: gets the current policy from the MDP.
-* `randmdp`: generates a random `P` and `R` that is a valid MDP.
 * `reset!`: resets an MDP to its original state.
-* `smallmdp`: generates a small example for `P` and `R`.
 * `value`: gets the value vector of the MDP.
 * `value_iteration!`: the value iteration algorithm.
+
+There are some examples in the `Examples` submodule:
+
+* `MDPs.Examples.random`: generates a random `P` and `R` that is a valid MDP.
+* `MDPs.Examples.small`: generates a small example for `P` and `R`.
 
 For more information please check the docstrings and source code for now.
 
