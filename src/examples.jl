@@ -7,6 +7,7 @@ function small()
 end
 
 include("random.jl")
+include("sparse_random.jl")
 
 # function bellmanmachine(k::Int, M::Int, p::Array{Float64,2}, q::Array{Float64,2})
 #     #

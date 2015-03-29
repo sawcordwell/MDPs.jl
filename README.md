@@ -81,6 +81,7 @@ These are the currently exported functions:
 There are some examples in the `Examples` submodule:
 
 * `MDPs.Examples.random`: generates a random `P` and `R` that is a valid MDP.
+* `MDPs.Examples.sprandom`: generates a sparse random `P` and `R`.
 * `MDPs.Examples.small`: generates a small example for `P` and `R`.
 
 For more information please check the docstrings and source code for now.

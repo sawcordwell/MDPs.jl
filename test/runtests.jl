@@ -5,6 +5,7 @@ using Base.Test
 
 include("bellman.jl")
 include("random.jl")
+include("sparse_random.jl")
 include("value_iteration.jl")
 
 end # module
