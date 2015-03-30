@@ -8,9 +8,10 @@ function sparse_random_factory(;
     return MDPs.Examples.sprandom(state_type, action_type, states, actions)
 end
 
-"sparse randmdp should return a vector of sparse Float64 transition matrices"
+"sparse random called without type arguments  should return a vector of "
+"sparse Float64 transition matrices"
 let
-    transition, reward = sparse_random_factory()
+    transition, reward = MDPs.Examples.sprandom(10, 2)
     @test typeof(transition) == Vector{SparseMatrixCSC{Float64,Int64}}
 end
 

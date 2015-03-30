@@ -81,4 +81,4 @@ function sprandom{P<:FloatingPoint,R<:FloatingPoint}(
 end
 
 
-sprandom(states, actions) = rand(Float64, Float64, states, actions)
+sprandom(states, actions) = sprandom(Float64, Float64, states, actions)
