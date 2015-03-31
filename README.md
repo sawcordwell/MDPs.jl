@@ -31,6 +31,7 @@ policy(mdp)
 ## Documentation
 
 The documentation is here for now until it becomes more complete.
+For more information please check the docstrings and source code for now.
 
 ### Types
 
@@ -78,13 +79,23 @@ These are the currently exported functions:
 * `value`: gets the value vector of the MDP.
 * `value_iteration!`: the value iteration algorithm.
 
+#### Examples
+
 There are some examples in the `Examples` submodule:
 
 * `MDPs.Examples.random`: generates a random `P` and `R` that is a valid MDP.
 * `MDPs.Examples.sprandom`: generates a sparse random `P` and `R`.
 * `MDPs.Examples.small`: generates a small example for `P` and `R`.
 
-For more information please check the docstrings and source code for now.
+##### `MDPs.Examples.random`
+
+`MDPs.Examples.random(states, actions)` will create a random Float64 transition
+array that is of size `states`×`states`×`actions` and a random Float64 reward
+array that is of size `states`×`actions`.
+
+`MDPs.Examples.random{N}(states, actions, mask::Array{Bool,N})` will set the
+transition array to zero everywhere that mask is `false`. `mask` can be
+`states`×`states`×`actions` or `states`×`actions` in size.
 
 ### References
 
