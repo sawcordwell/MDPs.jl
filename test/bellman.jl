@@ -1,118 +1,84 @@
-# ----------
-# Small test
-# ----------
-
-P, R = MDPs.Examples.small()
-value_initial = [0.5, 0.5]
-value_expected = [10.45, 2.45]
-discount = 0.9
-
-mdp = QMDP(P, R)
-bellman!(mdp, value_initial, discount)
-@test_approx_eq value(mdp) value_expected
-
-mdp = MDP(P, R, value_initial)
-bellman!(mdp, discount)
-@test_approx_eq value(mdp) value_expected
-
-# -----------
-# Larger test
-# -----------
-
-# Fixtures
-# --------
-
-P = cat(3,
-  [0.4  0.4  0.1  0.05 0.05;
-   0.1  0.35 0.1  0.1  0.35;
-   0.25 0.2  0.25 0.05 0.25;
-   0.05 0.25 0.3  0.25 0.15;
-   0.2  0.2  0.15 0.05 0.40]',
-  [0.3  0.15 0.2  0.05 0.3 ;
-   0.25 0.1  0.25 0.3  0.1 ;
-   0.25 0.2  0.25 0.1  0.2 ;
-   0.2  0.15 0    0.4  0.25;
-   0.4  0    0.45 0.15 0   ]',
-  [0.1  0.2  0.3  0.4  0   ;
-   0.15 0.3  0.4  0.1  0.05;
-   0.35 0.15 0.3  0.1  0.1 ;
-   0.3  0.2  0.3  0.1  0.1 ;
-   0.3  0.3  0.2  0.05 0.15]'
-)
-
-R = [ 0.82 -0.45 -0.42 -0.68  0.37;
-      0.49 -0.95  0.46  0.66 -0.57;
-     -0.73 -0.31 -0.07 -0.54 -0.29]'
-
-value_initial = [0.04, 0.49, 0.24, 0.45, 0.82]
-
-discount = 0.9
-
-value_expected = [1.08955, 0.02835, 0.7993, 1.07985, 0.81325]
-policy_expected = [1, 1, 2, 2, 1]
 
 # The non-in-place version of the Bellman operator
 # ------------------------------------------------
 
 # With returning the policy
-value_got, policy_got = bellman(value_initial, P, R, discount, policy=true)
-@test_approx_eq value_got value_expected
-@test policy_expected == policy_got
+let
+    value_got, policy_got = bellman(
+        fixture_initial_value(),
+        fixture_transition(),
+        fixture_reward(),
+        fixture_discount(),
+        policy=true,
+    )
+    @test_approx_eq value_got fixture_expected_value()
+    @test fixture_expected_policy() == policy_got
+end
 
 # Without returning the policy
-value_got = bellman(value_initial, P, R, discount)
-@test_approx_eq value_got value_expected
+let
+    value_got = bellman(
+        fixture_initial_value(),
+        fixture_transition(),
+        fixture_reward(),
+        fixture_discount(),
+    )
+    @test_approx_eq value_got fixture_expected_value()
+end
 
 # The in-place version of the Bellman operator
 # --------------------------------------------
 
 # With returning the policy
-value_got = copy(value_initial)
-policy_got = bellman!(value_got, P, R, discount, policy=true)
-@test_approx_eq value_got value_expected
-@test policy_expected == policy_got
+let
+    value_got = fixture_initial_value()
+    policy_got = bellman!(
+        value_got,
+        fixture_transition(),
+        fixture_reward(),
+        fixture_discount(),
+        policy=true,
+    )
+    @test_approx_eq value_got fixture_expected_value()
+    @test fixture_expected_policy() == policy_got
+end
 
 # Without returning the policy
-value_got = copy(value_initial)
-bellman!(value_got, P, R, discount)
-@test_approx_eq value_got value_expected
-
-# The MDP-type version of the Bellman operator
-# --------------------------------------------
-
-mdp = QMDP(P, R)
-bellman!(mdp, value_initial, discount)
-@test_approx_eq value(mdp) value_expected
-@test policy(mdp) == policy_expected
-
-mdp = MDP(P, R, value_initial)
-bellman!(mdp, discount)
-@test_approx_eq value(mdp) value_expected
-@test policy(mdp) == policy_expected
+let
+    value_got = fixture_initial_value()
+    bellman!(
+        value_got,
+        fixture_transition(),
+        fixture_reward(),
+        fixture_discount(),
+    )
+    @test_approx_eq value_got fixture_expected_value()
+end
 
 # Vector rewards
 # --------------
-R = [0.82, -0.45, -0.42, -0.68,  0.37]
 
-value_expected = [1.1818, 0.0283499999999999, -0.06405, -0.26015, 0.81325]
-policy_expected = [2, 1, 1, 2, 1]
+let
+    value_got = bellman(
+        fixture_initial_value(),
+        fixture_transition(),
+        fixture_reward(:vector),
+        fixture_discount(),
+    )
+    @test_approx_eq value_got fixture_expected_value(:vector)
+end
 
-value_got = bellman(value_initial, P, R, discount)
-@test_approx_eq value_got value_expected
-
-value_got, policy_got = bellman(value_initial, P, R, discount, policy=true)
-@test_approx_eq value_got value_expected
-@test policy_expected == policy_got
-
-mdp = QMDP(P, R)
-bellman!(mdp, value_initial, discount)
-@test_approx_eq value_got value_expected
-@test policy(mdp) == policy_expected
-
-mdp = MDP(P, R, value_initial)
-bellman!(mdp, discount)
-@test_approx_eq value(mdp) value_expected
-@test policy(mdp) == policy_expected
+let
+    value_got, policy_got = bellman(
+        fixture_initial_value(),
+        fixture_transition(),
+        fixture_reward(:vector),
+        fixture_discount(),
+        policy=true,
+    )
+    @test_approx_eq value_got fixture_expected_value(:vector)
+    @test fixture_expected_policy(:vector) == policy_got
+end
 
 # # Exactly representable floats
 # # ----------------------------
@@ -134,7 +100,7 @@ bellman!(mdp, discount)
 
 # V_expected = [1.1875, 2.1875, 3.1875, 4.1875]
 
-# for tp in (Float16, Float32, Float64)
+# for tp in (Float32, Float64)
 #   Pt = convert(Array{tp}, P)
 #   @assert all(sum(Pt, 1) .== one(tp))
 #   @test is_square_stochastic(Pt)

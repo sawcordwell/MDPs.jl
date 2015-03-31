@@ -15,13 +15,13 @@ let
     @test typeof(transition) == Vector{SparseMatrixCSC{Float64,Int64}}
 end
 
-"sparse randmdp should return a sparse Float64 reward"
+"sparse random should return a sparse Float64 reward"
 let
     transition, reward = sparse_random_factory()
     @test typeof(reward) == SparseMatrixCSC{Float64,Int64}
 end
 
-"sparse randmdp with Float32 types should return Float32 sparse matrices"
+"sparse random with Float32 types should return Float32 sparse matrices"
 let
     transition, reward = sparse_random_factory(
         state_type=Float32,
@@ -31,26 +31,26 @@ let
     @test typeof(reward) == SparseMatrixCSC{Float32,Int64}
 end
 
-"sparse randmdp transition matrix should be square"
+"sparse random transition matrix should be square"
 let
     transition, reward = sparse_random_factory()
     rows, columns = size(transition[1])
     @test rows == columns
 end
 
-"sparse randmdp transition rows should sum to one"
+"sparse random transition rows should sum to one"
 let
     transition, reward = sparse_random_factory()
     @test_approx_eq sum(transition[1], 1) ones(size(transition[1])[1])
 end
 
-"sparse randmdp transition probabilities should be non-negative"
+"sparse random transition probabilities should be non-negative"
 let
     transition, reward = sparse_random_factory()
     @test all(nonzeros(transition[1]) .>= 0)
 end
 
-"sparse randmdp transition matrices should be randomly generated"
+"sparse random transition matrices should be randomly generated"
 let
     transition1, reward = sparse_random_factory()
     transition2, reward = sparse_random_factory()
