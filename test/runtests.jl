@@ -3,9 +3,7 @@ module MDPsTests
 using MDPs
 using Base.Test
 
-if VERSION < v"0.4-"
-    using Compat
-end
+using Compat
 
 include("fixtures.jl")
 include("bellman.jl")

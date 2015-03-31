@@ -39,20 +39,11 @@ function random{P<:FloatingPoint,R<:FloatingPoint,N}(
     (transition, reward)
 end
 
-random{P<:FloatingPoint,R<:FloatingPoint}(
-    ::Type{P},
-    ::Type{R},
-    states,
-    actions,
-    mask::Array{Bool},
-) = random(P, R, states, actions, Nullable(mask))
+random{P,R}(::Type{P}, ::Type{R}, states, actions, mask::Array{Bool}) =
+    random(P, R, states, actions, Nullable(mask))
 
-random{P<:FloatingPoint,R<:FloatingPoint}(
-    ::Type{P},
-    ::Type{R},
-    states,
-    actions,
-) = random(P, R, states, actions, Nullable{Array{Bool}}())
+random{P,R}(::Type{P}, ::Type{R}, states, actions) =
+    random(P, R, states, actions, Nullable{Array{Bool,1}}())
 
 random{N}(states, actions, mask::Nullable{Array{Bool,N}}) =
     random(Float64, Float64, states, actions, mask)
@@ -60,4 +51,4 @@ random{N}(states, actions, mask::Nullable{Array{Bool,N}}) =
 random(states, actions, mask::Array{Bool}) =
  random(states, actions, Nullable(mask))
 
-random(states, actions) = random(states, actions, Nullable{Array{Bool,2}}())
+random(states, actions) = random(states, actions, Nullable{Array{Bool,1}}())

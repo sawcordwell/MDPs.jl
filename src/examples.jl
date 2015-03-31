@@ -1,8 +1,6 @@
 module Examples
 
-if VERSION < v"0.4-"
-    using Compat
-end
+using Compat
 
 function small()
   P = cat(3, [0.5 0.8; 0.5 0.2], [0 0.1; 1 0.9])

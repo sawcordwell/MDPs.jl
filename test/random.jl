@@ -44,3 +44,10 @@ let
     @test typeof(transition) == Array{Float64,3}
     @test typeof(reward) == Array{Float64,2}
 end
+
+"random with different types for transition and reward should return arrays of those types"
+let
+    transition, reward = MDPs.Examples.random(Float64, Float32, 10, 2)
+    @test typeof(transition) == Array{Float64,3}
+    @test typeof(reward) == Array{Float32,2}
+end
