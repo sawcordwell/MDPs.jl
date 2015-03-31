@@ -51,3 +51,10 @@ let
     @test typeof(transition) == Array{Float64,3}
     @test typeof(reward) == Array{Float32,2}
 end
+
+"random should allow Integer reward types"
+let
+    transition, reward = MDPs.Examples.random(Float64, Int8, 10, 2)
+    @test typeof(transition) == Array{Float64,3}
+    @test typeof(reward) == Array{Int8,2}
+end

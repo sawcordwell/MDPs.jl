@@ -1,5 +1,7 @@
 
-rand_reward{R}(::Type{R}, dims...) = 1 .- 2*rand(R, dims...)
+rand_reward{T<:FloatingPoint}(::Type{T}, dims...) = 1 .- 2*rand(T, dims...)
+
+rand_reward{T<:Integer}(::Type{T}, dims...) = rand(T, dims...)
 
 
 sum_columns_to_one(a::Array) = a ./ sum(a, 1)
@@ -25,7 +27,7 @@ function zero_mask!{T}(a::AbstractArray{T,3}, mask::AbstractArray{Bool,3})
 end
 
 
-function random{P<:FloatingPoint,R<:FloatingPoint,N}(
+function random{P<:FloatingPoint,R<:Real,N}(
     ::Type{P},
     ::Type{R},
     states,
