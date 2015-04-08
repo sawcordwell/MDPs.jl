@@ -104,7 +104,7 @@ Bellman R, 1957, [A Markovian Decision Process](http://www.iumj.indiana.edu/IUMJ
 ## Support
 
 Please file and issues or feature requests through the GitHub
-[issue tracker](https://github.com/MichaelHatherly/Docile.jl/issues).
+[issue tracker](https://github.com/sawcordwell/MDPs.jl/issues).
 
 ## License
 
