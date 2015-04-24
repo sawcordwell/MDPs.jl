@@ -7,6 +7,7 @@ abstract
   SparseMDP{P<:FloatingPoint,Pi<:Integer,R<:Real} <:
   AbstractMDP
 
+
 @doc """
 # Interface
 
@@ -26,3 +27,25 @@ where Q is a subtype of AbstractQFunction
 
 """ ->
 abstract AbstractQFunction
+
+
+@doc """
+# Interface
+
+* probability(P, s, t, a) -> the probability of transitioning from state s to state t given action a
+
+""" ->
+abstract AbstractTransitionProbability
+
+
+@doc """
+# Interface
+
+* probability(P, a) -> probability transition matrix for action a
+
+## Optional
+
+* getindex(P, s, t, a) -> the probability of transitioning from state s to state t given action a
+
+""" ->
+abstract AbstractTransitionProbabilityArray <: AbstractTransitionProbability

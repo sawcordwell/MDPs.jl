@@ -15,6 +15,13 @@ export # MDP types
        ArrayQFunction,
        VectorQFunction,
 
+       # transition probability types
+       AbstractTransitionProbability,
+       AbstractTransitionProbabilityArray,
+       SparseTransitionProbabilityArray,
+       TransitionProbabilityArray,
+       TransitionProbabilityFunction,
+
        # functions
        bellman,
        bellman!,
@@ -24,6 +31,7 @@ export # MDP types
        num_actions,
        num_states,
        policy,
+       probability,
        reset!,
        setvalue!,
        value,
@@ -31,6 +39,7 @@ export # MDP types
 
 
 include("abstract.jl")
+include("transition.jl")
 include("qfunction.jl")
 include("bellman.jl")
 include("dense.jl")
