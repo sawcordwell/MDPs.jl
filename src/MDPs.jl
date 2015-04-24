@@ -22,6 +22,13 @@ export # MDP types
        TransitionProbabilityArray,
        TransitionProbabilityFunction,
 
+       # reward types
+       AbstractReward,
+       AbstractRewardArray,
+       Reward,  # constructor helper
+       RewardArray,
+       RewardVector,
+
        # functions
        bellman,
        bellman!,
@@ -33,6 +40,7 @@ export # MDP types
        policy,
        probability,
        reset!,
+       reward,
        setvalue!,
        value,
        value_iteration!
@@ -40,6 +48,7 @@ export # MDP types
 
 include("abstract.jl")
 include("transition.jl")
+include("reward.jl")
 include("qfunction.jl")
 include("bellman.jl")
 include("dense.jl")
