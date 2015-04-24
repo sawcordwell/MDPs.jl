@@ -58,3 +58,8 @@ facts("VectorQFunction setvalue! not assigned") do
     @fact value(qf, 1) => 3.0
     @fact policy(qf, 1) => 3
 end
+
+facts("helper constructor") do
+    @fact typeof(QFunction(zeros(5, 3))) => ArrayQFunction{Float64}
+    @fact typeof(QFunction(zeros(5), zeros(Int, 5))) => VectorQFunction{Float64,Int}
+end

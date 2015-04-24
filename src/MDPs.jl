@@ -10,15 +10,17 @@ export # MDP types
        QMDP,
        MDP,
 
-       # Q function types
+       # Q-function types
        AbstractQFunction,
        ArrayQFunction,
+       QFunction,  # constructor helper
        VectorQFunction,
 
        # transition probability types
        AbstractTransitionProbability,
        AbstractTransitionProbabilityArray,
        SparseTransitionProbabilityArray,
+       TransitionProbability,  # constructor helper
        TransitionProbabilityArray,
        TransitionProbabilityFunction,
 

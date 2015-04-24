@@ -30,3 +30,12 @@ facts("TransitionProbabilityFunction methods") do
     @fact probability(P, 1, 1, 1) => 1
     @fact probability(P, 1, 2, 1) => 0
 end
+
+facts("helper constructor") do
+    @fact typeof(TransitionProbability(cat(3, eye(5), eye(5)))) =>
+        TransitionProbabilityArray{Float64}
+    @fact typeof(TransitionProbability([speye(5) for x=1:2])) =>
+        SparseTransitionProbabilityArray{Float64,Int}
+    @fact typeof(TransitionProbability((s, t, a) -> s == t ? 1 : 0)) =>
+        TransitionProbabilityFunction
+end

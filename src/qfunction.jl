@@ -38,6 +38,9 @@ ArrayQFunction{T}(::Type{T}, states, actions) =
 ArrayQFunction(states, actions) = ArrayQFunction(Float64, states, actions)
 
 
+QFunction(A::Matrix) = ArrayQFunction(A)
+
+
 ==(a::ArrayQFunction, b::ArrayQFunction) = a.array == b.array
 
 isequal(a::ArrayQFunction, b::ArrayQFunction) = isequal(a.array, b.array)
@@ -91,6 +94,9 @@ VectorQFunction{V,A}(::Type{V}, ::Type{A}, states) =
     VectorQFunction(zeros(V, states), zeros(A, states))
 
 VectorQFunction(states) = VectorQFunction(Float64, Int, states)
+
+
+QFunction(A::Vector, B::Vector) = VectorQFunction(A, B)
 
 
 ==(a::VectorQFunction, b::VectorQFunction) =

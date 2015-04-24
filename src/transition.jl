@@ -55,6 +55,9 @@ end
 TransitionProbabilityArray{T}(array::Array{T,3}) = TransitionProbabilityArray{T}(array)
 
 
+TransitionProbability{T}(A::Array{T,3}) = TransitionProbabilityArray(A)
+
+
 num_actions(P::TransitionProbabilityArray) = size(P, 3)
 
 num_states(P::TransitionProbabilityArray) = size(P, 1)
@@ -85,6 +88,10 @@ immutable SparseTransitionProbabilityArray{Tv<:Real,Ti} <: AbstractTransitionPro
 end
 
 
+TransitionProbability{Tv,Ti}(A::Vector{SparseMatrixCSC{Tv,Ti}}) =
+    SparseTransitionProbabilityArray(A)
+
+
 num_actions(P::SparseTransitionProbabilityArray) = length(P.array)
 
 num_states(P::SparseTransitionProbabilityArray) = size(getindex(P.array, 1), 1)
@@ -104,6 +111,9 @@ probability(P::SparseTransitionProbabilityArray, a) = getindex(P.array, a)
 immutable TransitionProbabilityFunction <: AbstractTransitionProbability
     func::Function
 end
+
+
+TransitionProbability(F::Function) = TransitionProbabilityFunction(F)
 
 
 probability(P::TransitionProbabilityFunction, s, t, a) = P.func(s, t, a)
