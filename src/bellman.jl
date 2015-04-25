@@ -1,9 +1,16 @@
 
-function update_value{P,R,V}(s, j, k, transition::Array{P,3}, value::Vector{V},
-                             reward::R, δ)
+function _value_update_unsafe{P,R,V}(
+    num_states,
+    state_to,
+    action,
+    transition::Array{P,3},
+    value::Vector{V},
+    reward::R,
+    δ,
+)
   Σ = zero(V)
-  @simd for i = 1:s
-    @inbounds Σ += convert(V, transition[i, j, k] * value[i])
+  @simd for s = 1:num_states
+    @inbounds Σ += convert(V, transition[s, state_to, action] * value[s])
   end
   return convert(V, reward + δ*Σ)
 end
@@ -39,7 +46,7 @@ function bellman!{P,R,V}(Q::Array{V,2}, value::Vector{V},
   @assert size(Q) == (s2, a)
   @inbounds for k = 1:a
     for j = 1:s2
-      Q[j, k] = update_value(s1, j, k, transition, value, reward[j, k], δ)
+      Q[j, k] = _value_update_unsafe(s1, j, k, transition, value, reward[j, k], δ)
     end
   end
   return Q
@@ -76,7 +83,7 @@ function bellman!{P,R,V}(Q::Array{V,2}, value::Vector{V},
   @assert size(Q) == (s2, a)
   @inbounds for k = 1:a
     for j = 1:s2
-      Q[j, k] = update_value(s1, j, k, transition, value, reward[j], δ)
+      Q[j, k] = _value_update_unsafe(s1, j, k, transition, value, reward[j], δ)
     end
   end
   return Q
@@ -93,7 +100,7 @@ function bellman!{P,R,V,A}(value::Vector{V}, policy::Vector{A},
   @assert size(reward) == (s2, a)
   @inbounds for k = 1:a
     for j = 1:s2
-      q = update_value(s1, j, k, transition, value_prev, reward[j, k], δ)
+      q = _value_update_unsafe(s1, j, k, transition, value_prev, reward[j, k], δ)
       if value[j] < q
         value[j] = convert(V, q)
         policy[j] = convert(A, k)
@@ -114,7 +121,7 @@ function bellman!{P,R,V,A}(value::Vector{V}, policy::Vector{A},
   @assert length(reward) == s2
   @inbounds for k = 1:a
     for j = 1:s2
-      q = update_value(s1, j, k, transition, value_prev, reward[j], δ)
+      q = _value_update_unsafe(s1, j, k, transition, value_prev, reward[j], δ)
       if value[j] < q
         value[j] = convert(V, q)
         policy[j] = convert(A, k)
