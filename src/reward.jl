@@ -20,6 +20,11 @@ abstract AbstractRewardArray <: AbstractReward
 
 getindex(R::AbstractRewardArray, dims...) = getindex(R.array, dims...)
 
+size(R::AbstractRewardArray, d) = size(R.array, d)
+
+
+num_states(R::AbstractRewardArray) = size(R, 1)
+
 
 
 # ----------

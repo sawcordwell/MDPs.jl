@@ -1,4 +1,9 @@
 
+fixture_num_states() = 5
+
+fixture_num_actions() = 3
+
+
 fixture_transition() = cat(3,
     [0.4  0.4  0.1  0.05 0.05;
      0.1  0.35 0.1  0.1  0.35;

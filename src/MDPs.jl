@@ -1,13 +1,13 @@
 module MDPs
 
+using Compat
+
 if VERSION < v"0.4-dev"
   using Docile
 end
 
 export # MDP types
        AbstractMDP,
-       DenseMDP,
-       QMDP,
        MDP,
 
        # Q-function types
@@ -22,7 +22,6 @@ export # MDP types
        SparseTransitionProbabilityArray,
        TransitionProbability,  # constructor helper
        TransitionProbabilityArray,
-       TransitionProbabilityFunction,
 
        # reward types
        AbstractReward,
@@ -40,20 +39,22 @@ export # MDP types
        num_actions,
        num_states,
        policy,
+       policy!,
        probability,
-       reset!,
        reward,
        setvalue!,
        value,
+       value!,
+       valuetype,
+       value_iteration,
        value_iteration!
 
 
-include("abstract.jl")
 include("transition.jl")
 include("reward.jl")
 include("qfunction.jl")
 include("bellman.jl")
-include("dense.jl")
+include("mdp.jl")
 include("examples.jl")
 include("utils.jl")
 

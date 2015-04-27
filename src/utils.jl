@@ -66,4 +66,7 @@ function ismdp{P<:FloatingPoint,R<:Real}(transition::AbstractArray{P,3}, reward:
     return (S1T == S1R) && (S2T == S2R) && (AT == AR) && is_square_stochastic(transition)
 end
 
+ismdp(transition::AbstractTransitionProbability, reward::AbstractReward) =
+    ismdp(transition.array, reward.array)
+
 span(A::AbstractArray) = maximum(A) - minimum(A)

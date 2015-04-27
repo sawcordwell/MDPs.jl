@@ -1,3 +1,5 @@
+import Base: copy
+
 # -------------
 # Abstract type
 # -------------
@@ -41,33 +43,61 @@ ArrayQFunction(states, actions) = ArrayQFunction(Float64, states, actions)
 QFunction(A::Matrix) = ArrayQFunction(A)
 
 
+# Base methods
+# ------------
+
 ==(a::ArrayQFunction, b::ArrayQFunction) = a.array == b.array
 
 isequal(a::ArrayQFunction, b::ArrayQFunction) = isequal(a.array, b.array)
 
+copy(Q::ArrayQFunction) = ArrayQFunction(copy(Q.array))
+
+
+# Size methods
+# ------------
 
 num_actions(Q::ArrayQFunction) = size(Q.array, 2)
 
 num_states(Q::ArrayQFunction) = size(Q.array, 1)
 
 
+# Value methods
+# -------------
+
 value(Q::ArrayQFunction, state) = maximum(Q.array[state, :])
 
-value{T}(Q::ArrayQFunction{T}) = T[ value(Q, s) for s = 1:num_states(Q) ]
+function value!(A::Vector, Q::ArrayQFunction)
+    for s = 1:num_states(Q)
+        A[s] = value(Q, s)
+    end
+    return A
+end
 
-
-policy(Q::ArrayQFunction, state) = indmax(Q.array[state, :])
-
-policy{T}(::Type{T}, Q::ArrayQFunction) =
-    T[ policy(Q, s) for s = 1:num_states(Q) ]
-
-policy(Q::ArrayQFunction) = policy(Int, Q)
-
+value{T}(Q::ArrayQFunction{T}) = value!(Array(T, num_states(Q)), Q)
 
 getvalue(Q::ArrayQFunction, state, action) = getindex(Q.array, state, action)
 
 setvalue!(Q::ArrayQFunction, v, state, action) =
     (setindex!(Q.array, v, state, action); Q)
+
+valuetype{T}(Q::ArrayQFunction{T}) = T
+
+
+# Policy methods
+# --------------
+
+policy(Q::ArrayQFunction, state) = indmax(Q.array[state, :])
+
+function policy!(A::Vector, Q::ArrayQFunction)
+    for s = 1:num_states(Q)
+        A[s] = policy(Q, s)
+    end
+    return A
+end
+
+policy{T}(::Type{T}, Q::ArrayQFunction) = policy!(Array(T, num_states(Q)), Q)
+
+policy(Q::ArrayQFunction) = policy(Int, Q)
 
 
 
@@ -99,12 +129,20 @@ VectorQFunction(states) = VectorQFunction(Float64, Int, states)
 QFunction(A::Vector, B::Vector) = VectorQFunction(A, B)
 
 
+# Base methods
+# ------------
+
 ==(a::VectorQFunction, b::VectorQFunction) =
     (a.value == b.value) & (a.policy == b.policy)
 
 isequal(a::ArrayQFunction, b::ArrayQFunction) =
     isequal(a.value, b.value) & isequal(a.policy, b.policy)
 
+copy(Q::VectorQFunction) = VectorQFunction(copy(Q.value), copy(Q.policy))
+
+
+# Size methods
+# ------------
 
 # VectorQFunction can not calculate the number of actions so cannot define
 # num_actions(Q::VectorQFunction)
@@ -112,18 +150,19 @@ isequal(a::ArrayQFunction, b::ArrayQFunction) =
 num_states(Q::VectorQFunction) = length(Q.value)
 
 
+# Value methods
+# -------------
+
+value!(A::Vector, Q::VectorQFunction) = copy!(A, Q.value)
+
 value(Q::VectorQFunction) = Q.value
 
 value(Q::VectorQFunction, state) = getindex(Q.value, state)
 
-
-policy(Q::VectorQFunction) = Q.policy
-
-policy(Q::VectorQFunction, state) = getindex(Q.policy, state)
-
-
-# VectorQFunction does not store state-action pairs so cannot define
-# getvalue(Q::VectorQFunction, s, a)
+@doc """
+Returns negative infinity if `a` is not the optimal action.
+""" ->
+getvalue{V,A}(Q::VectorQFunction{V,A}, s, a) = Q.policy[s] == a ? Q.value[s] : convert(V, -Inf)
 
 function setvalue!(Q::VectorQFunction, v, state, action)
     if v > value(Q, state)
@@ -132,3 +171,15 @@ function setvalue!(Q::VectorQFunction, v, state, action)
     end
     return Q
 end
+
+valuetype{V,A}(Q::VectorQFunction{V,A}) = V
+
+
+# Policy methods
+# --------------
+
+policy!(A::Vector, Q::VectorQFunction) = copy!(A, Q.policy)
+
+policy(Q::VectorQFunction) = Q.policy
+
+policy(Q::VectorQFunction, state) = getindex(Q.policy, state)

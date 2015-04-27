@@ -43,6 +43,9 @@ facts("VectorQFunction methods") do
     @fact_throws MethodError value(qf, 1, 2)
     @fact num_states(qf) => 5
     @fact_throws MethodError num_actions(qf)
+    qf_new = copy(qf)
+    @fact qf_new == qf => true
+    @fact qf_new === qf => false
 end
 
 facts("VectorQFunction setvalue! assigned") do
@@ -62,4 +65,34 @@ end
 facts("helper constructor") do
     @fact typeof(QFunction(zeros(5, 3))) => ArrayQFunction{Float64}
     @fact typeof(QFunction(zeros(5), zeros(Int, 5))) => VectorQFunction{Float64,Int}
+end
+
+facts("copy value! to vector") do
+    qf = ArrayQFunction(rand(5, 3))
+    val = Array(Float64, 5)
+    value!(val, qf)
+    @fact val == value(qf) => true
+    @fact val === value(qf) => false
+    @fact_throws BoundsError value!(Array(Float64, 4), qf)
+    qf = VectorQFunction(rand(5), rand(Int, 5))
+    val = Array(Float64, 5)
+    value!(val, qf)
+    @fact val == value(qf) => true
+    @fact val === value(qf) => false
+    @fact_throws BoundsError value!(Array(Float64, 4), qf)
+end
+
+facts("copy policy! to vector") do
+    qf = ArrayQFunction(rand(5, 3))
+    pol = Array(Int, 5)
+    policy!(pol, qf)
+    @fact pol == policy(qf) => true
+    @fact pol === policy(qf) => false
+    @fact_throws BoundsError policy!(Array(Int, 4), qf)
+    qf = VectorQFunction(rand(5), rand(Int, 5))
+    pol = Array(Int, 5)
+    policy!(pol, qf)
+    @fact pol == policy(qf) => true
+    @fact pol === policy(qf) => false
+    @fact_throws BoundsError policy!(Array(Int, 4), qf)
 end

@@ -88,7 +88,7 @@ immutable SparseTransitionProbabilityArray{Tv<:Real,Ti} <: AbstractTransitionPro
 end
 
 
-TransitionProbability{Tv,Ti}(A::Vector{SparseMatrixCSC{Tv,Ti}}) =
+TransitionProbability{T<:SparseMatrixCSC}(A::Vector{T}) =
     SparseTransitionProbabilityArray(A)
 
 

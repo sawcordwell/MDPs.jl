@@ -23,6 +23,7 @@ facts("RewardArray methods") do
     @fact reward(R, 2, 1, 3) => 1
     @fact_throws BoundsError R[2, 1, 3]
     @fact_throws MethodError reward(R, 2)
+    @fact num_states(R) => 5
 end
 
 facts("RewardVector construction") do
@@ -30,7 +31,7 @@ facts("RewardVector construction") do
     @fact_throws MethodError RewardVector(rand(5, 3))
 end
 
-facts("RewardArray methods") do
+facts("RewardVector methods") do
     R = RewardVector([1, 3, 1, 1, 2])
     @fact R[2] => 3
     @fact reward(R, 2) => 3
@@ -38,4 +39,5 @@ facts("RewardArray methods") do
     @fact reward(R, 2, 1, 3) => 3
     @fact_throws BoundsError R[2, 3]
     @fact_throws BoundsError R[2, 1, 3]
+    @fact num_states(R) => 5
 end
