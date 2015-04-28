@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/sawcordwell/MDPs.jl.svg?branch=master)](https://travis-ci.org/sawcordwell/MDPs.jl)
 [![Coverage Status](https://coveralls.io/repos/sawcordwell/MDPs.jl/badge.png?branch=master)](https://coveralls.io/r/sawcordwell/MDPs.jl?branch=master)
+[![MDPs](http://pkg.julialang.org/badges/MDPs_release.svg)](http://pkg.julialang.org/?pkg=MDPs&ver=release)
 
 *MDPs* is a [Julia](http://www.julialang.org/) package for working with Markov
 decision processes (MDPs).
@@ -181,7 +182,7 @@ Q6 = QFunction(rand(10), rand(Int, 10))  # identical to previous
 
 #### MDP types
 
-The base type if `AbstractMDP` with one concrete subtype `MDP`.
+The base type is `AbstractMDP` with one concrete subtype `MDP`.
 `POMDP` is planned for the future.
 
 The MDP types provide a wrapper around `AbstractTransitionProbability` and `AbstractReward` types,
