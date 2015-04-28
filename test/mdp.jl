@@ -26,3 +26,21 @@ facts("discounted sparse value iteration") do
     @fact typeof(policy(qfunc)) => Vector{Int}
     @fact typeof(value(qfunc)) => Vector{Float64}
 end
+
+facts("MDP methods") do
+    P = cat(3, eye(5), eye(5))
+    R = [1 2 3 4 5; 5 4 3 2 1]'
+    mdp = MDP(P, R)
+    @fact reward(mdp, 2, 1) => 2
+    @fact probability(mdp, 1, 1, 1) => 1
+    @fact probability(mdp, 1, 2, 2) => 0
+    @fact num_states(mdp) => 5
+    @fact num_actions(mdp) => 2
+end
+
+facts("max iter too small") do
+    warn(x) = "WARNING"
+    P, R = MDPs.Examples.small()
+    Q = value_iteration(MDP(P, R), 0.9, max_iter=5)
+    @pending "test that there is a warning" => true
+end

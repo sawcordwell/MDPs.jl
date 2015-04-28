@@ -29,16 +29,6 @@ abstract AbstractArrayTransitionProbability <: AbstractTransitionProbability
 
 
 
-# --------------
-# Base functions
-# --------------
-
-ndims(P::AbstractArrayTransitionProbability) = ndims(P.array)
-size(P::AbstractArrayTransitionProbability) = size(P.array)
-size(P::AbstractArrayTransitionProbability, dims...) = size(P.array, dims...)
-
-
-
 # ----------
 # Array type
 # ----------
@@ -58,13 +48,27 @@ ArrayTransitionProbability{T}(array::Array{T,3}) = ArrayTransitionProbability{T}
 TransitionProbability{T}(A::Array{T,3}) = ArrayTransitionProbability(A)
 
 
+# Base
+# ----
+
+ndims(P::ArrayTransitionProbability) = ndims(P.array)
+
+size(P::ArrayTransitionProbability) = size(P.array)
+size(P::ArrayTransitionProbability, dims...) = size(P.array, dims...)
+
+getindex(P::ArrayTransitionProbability, dims...) = getindex(P.array, dims...)
+
+
+# num
+# ---
+
 num_actions(P::ArrayTransitionProbability) = size(P, 3)
 
 num_states(P::ArrayTransitionProbability) = size(P, 1)
 
 
-getindex(P::ArrayTransitionProbability, dims...) = getindex(P.array, dims...)
-
+# probability
+# -----------
 
 @doc """
 # Transition probability

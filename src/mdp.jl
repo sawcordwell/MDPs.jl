@@ -5,7 +5,7 @@ abstract AbstractMDP
 # Methods that should work for all types of AbstractMDP
 # -----------------------------------------------------
 
-reward(mdp::AbstractMDP, s, t, a) = reward(mdp.reward, s, t, a)
+reward(mdp::AbstractMDP, state, action) = reward(mdp.reward, state, action)
 probability(mdp::AbstractMDP, s, t, a) = probability(mdp.transition, s, t, a)
 num_states(mdp::AbstractMDP) = mdp.n_states
 num_actions(mdp::AbstractMDP) = mdp.n_actions

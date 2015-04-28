@@ -17,6 +17,11 @@ facts("ArrayQFunction methods") do
     @fact getvalue(qf, 1, 2) => 2.0
     @fact num_states(qf) => 5
     @fact num_actions(qf) => 3
+    newq  = copy(qf)
+    @fact newq == qf => true
+    @fact newq === qf => false
+    @fact isequal(newq, qf) => true
+    @fact valuetype(qf) => Float64
 end
 
 facts("ArrayQFunction setvalue!") do
@@ -46,6 +51,8 @@ facts("VectorQFunction methods") do
     qf_new = copy(qf)
     @fact qf_new == qf => true
     @fact qf_new === qf => false
+    @fact isequal(qf_new, qf) => true
+    @fact valuetype(qf) => Float64
 end
 
 facts("VectorQFunction setvalue! assigned") do

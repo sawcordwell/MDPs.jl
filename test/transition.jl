@@ -14,6 +14,8 @@ facts("ArrayTransitionProbability methods") do
     @fact probability(P, 1) => eye(5)
     @fact num_states(P) => 5
     @fact num_actions(P) => 2
+    @fact size(P) => (5, 5, 2)
+    @fact ndims(P) => 3
 end
 
 facts("SparseArrayTransitionProbability methods") do
