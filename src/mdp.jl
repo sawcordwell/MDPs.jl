@@ -23,8 +23,7 @@ immutable MDP <: AbstractMDP
 
     function MDP(transition::AbstractTransitionProbability, reward::AbstractReward)
         ismdp(transition, reward) || error("Not a valid MDP.")
-        n_states, n_actions = size(transition)[[1,3]]
-        new(transition, reward, n_states, n_actions)
+        new(transition, reward, num_states(transition), num_actions(transition))
     end
 end
 
@@ -55,11 +54,7 @@ function value_iteration!(Q::AbstractQFunction, mdp::MDP, δ; ϵ=0.01, max_iter=
     @assert ϵ > 0 "ERROR: ϵ not greater than 0"
     @assert max_iter > 0 "ERROR: max_iter not greater than 0"
     # Calculate the stopping threshold
-    if δ < 1.0
-        threshold = ϵ*(1.0 - δ)/δ
-    else
-        threshold = ϵ
-    end
+    threshold = δ < 1.0 ? ϵ*(1.0 - δ)/δ : ϵ
     val = Array(valuetype(Q), num_states(mdp))
     value!(val, Q)  # initial value
     # Find the ϵ-optimal value function

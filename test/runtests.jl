@@ -15,6 +15,7 @@ include("random.jl")
 include("reward.jl")
 include("sparse_random.jl")
 include("transition.jl")
+include("utils.jl")
 
 FactCheck.exitstatus()
 
