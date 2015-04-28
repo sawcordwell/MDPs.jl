@@ -108,12 +108,19 @@ probability(P::SparseArrayTransitionProbability, a) = getindex(P.array, a)
 # Function type
 # -------------
 
-immutable TransitionProbabilityFunction <: AbstractTransitionProbability
+immutable FunctionTransitionProbability <: AbstractTransitionProbability
     func::Function
+    states::Int
+    actions::Int
 end
 
 
-TransitionProbability(F::Function) = TransitionProbabilityFunction(F)
+TransitionProbability(F::Function, states, actions) = FunctionTransitionProbability(F, states, actions)
 
 
-probability(P::TransitionProbabilityFunction, s, t, a) = P.func(s, t, a)
+num_actions(P::FunctionTransitionProbability) = P.actions
+
+num_states(P::FunctionTransitionProbability) = P.states
+
+
+probability(P::FunctionTransitionProbability, s, t, a) = P.func(s, t, a)

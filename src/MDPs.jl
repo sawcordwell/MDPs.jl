@@ -20,14 +20,15 @@ export # MDP types
        AbstractTransitionProbability,
        AbstractArrayTransitionProbability,
        ArrayTransitionProbability,
+       FunctionTransitionProbability,
        SparseArrayTransitionProbability,
        TransitionProbability,  # constructor helper
 
        # reward types
        AbstractReward,
        AbstractArrayReward,
-       Reward,  # constructor helper
        ArrayReward,
+       Reward,  # constructor helper
        SparseReward,
 
        # functions

@@ -3,7 +3,7 @@ facts("Transition probability types") do
     @fact AbstractArrayTransitionProbability <: AbstractTransitionProbability => true
     @fact ArrayTransitionProbability <: AbstractArrayTransitionProbability => true
     @fact SparseArrayTransitionProbability <: AbstractArrayTransitionProbability => true
-    @fact MDPs.TransitionProbabilityFunction <: AbstractTransitionProbability => true
+    @fact FunctionTransitionProbability <: AbstractTransitionProbability => true
 end
 
 facts("ArrayTransitionProbability methods") do
@@ -25,10 +25,12 @@ facts("SparseArrayTransitionProbability methods") do
     @fact num_actions(P) => 2
 end
 
-facts("TransitionProbabilityFunction methods") do
-    P = MDPs.TransitionProbabilityFunction((s, t, a) -> s == t ? 1 : 0)
+facts("FunctionTransitionProbability methods") do
+    P = FunctionTransitionProbability((s, t, a) -> s == t ? 1 : 0, 5, 2)
     @fact probability(P, 1, 1, 1) => 1
     @fact probability(P, 1, 2, 1) => 0
+    @fact num_states(P) => 5
+    @fact num_actions(P) => 2
 end
 
 facts("helper constructor") do
@@ -36,6 +38,6 @@ facts("helper constructor") do
         ArrayTransitionProbability{Float64}
     @fact typeof(TransitionProbability([ speye(5) for x=1:2 ])) =>
         SparseArrayTransitionProbability{Float64,Int}
-    @fact typeof(TransitionProbability((s, t, a) -> s == t ? 1 : 0)) =>
-        MDPs.TransitionProbabilityFunction
+    @fact typeof(TransitionProbability((s, t, a) -> s == t ? 1 : 0, 5, 2)) =>
+        FunctionTransitionProbability
 end

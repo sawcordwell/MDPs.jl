@@ -40,17 +40,15 @@ facts("SparseArrayTransitionProbability with bellman!") do
     @fact policy(qfunc) == fixture_expected_policy() => true
 end
 
-# There is no yet a Bellman operator function that works with
-# TransitionProbabilityFunction
-# facts("TransitionProbabilityFunction with bellman!") do
-#     qfunc = ArrayQFunction(fixture_num_states(), fixture_num_actions())
-#     array = fixture_transition()
-#     trans = TransitionProbability((s, t, a) -> array[s, t, a])
-#     reward = Reward(fixture_reward())
-#     bellman!(qfunc, fixture_initial_value(), trans, reward, fixture_discount())
-#     @fact value(qfunc) => roughly(fixture_expected_value())
-#     @fact policy(qfunc) == fixture_expected_policy() => true
-# end
+facts("FunctionTransitionProbability with bellman!") do
+    qfunc = ArrayQFunction(fixture_num_states(), fixture_num_actions())
+    array = fixture_transition()
+    trans = TransitionProbability((s, t, a) -> array[s, t, a], fixture_num_states(), fixture_num_actions())
+    reward = Reward(fixture_reward())
+    bellman!(qfunc, fixture_initial_value(), trans, reward, fixture_discount())
+    @fact value(qfunc) => roughly(fixture_expected_value())
+    @fact policy(qfunc) == fixture_expected_policy() => true
+end
 
 facts("ArrayReward with bellman!") do
     qfunc = VectorQFunction(fixture_num_states())

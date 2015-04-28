@@ -1,4 +1,3 @@
-
 @doc """
 Bellman operator.
 
@@ -25,14 +24,14 @@ and reward arrays. Consider using one of the MDP types instead.
 function bellman!(
     Q::AbstractQFunction,
     value_prev::Vector,
-    P::AbstractArrayTransitionProbability,
+    P::AbstractTransitionProbability,
     R::AbstractReward,
     δ,
 )
     0 < δ <= 1 || error("δ musy be in the interval (0, 1].")
     S = num_states(P)
     A = num_actions(P)
-    @assert S == num_states(R) == num_states(Q) == length(value_prev)
+    S == num_states(R) == num_states(Q) == length(value_prev) || throw(DimensionMismatch())
     V = valuetype(Q)
     @inbounds for a = 1:A
         for s1 = 1:S
