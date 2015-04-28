@@ -25,10 +25,10 @@ export # MDP types
 
        # reward types
        AbstractReward,
-       AbstractRewardArray,
+       AbstractArrayReward,
        Reward,  # constructor helper
-       RewardArray,
-       RewardVector,
+       ArrayReward,
+       SparseReward,
 
        # functions
        bellman,

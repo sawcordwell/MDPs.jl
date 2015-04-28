@@ -52,7 +52,7 @@ end
 #     @fact policy(qfunc) == fixture_expected_policy() => true
 # end
 
-facts("RewardArray with bellman!") do
+facts("ArrayReward with bellman!") do
     qfunc = VectorQFunction(fixture_num_states())
     trans = TransitionProbability(fixture_transition())
     reward = Reward(fixture_reward(:array))
