@@ -28,7 +28,7 @@ facts("ArrayQFunction with bellman!") do
     @fact policy(qfunc) == fixture_expected_policy() => true
 end
 
-facts("SparseTransitionProbabilityArray with bellman!") do
+facts("SparseArrayTransitionProbability with bellman!") do
     qfunc = ArrayQFunction(fixture_num_states(), fixture_num_actions())
     T = SparseMatrixCSC{Float64,Int}
     array = fixture_transition()

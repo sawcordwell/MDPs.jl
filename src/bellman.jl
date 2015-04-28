@@ -25,7 +25,7 @@ and reward arrays. Consider using one of the MDP types instead.
 function bellman!(
     Q::AbstractQFunction,
     value_prev::Vector,
-    P::AbstractTransitionProbabilityArray,
+    P::AbstractArrayTransitionProbability,
     R::AbstractReward,
     δ,
 )

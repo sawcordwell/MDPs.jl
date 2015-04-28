@@ -25,7 +25,7 @@ abstract AbstractTransitionProbability
 * getindex(P, s, t, a) -> the probability of transitioning from state s to state t given action a
 
 """ ->
-abstract AbstractTransitionProbabilityArray <: AbstractTransitionProbability
+abstract AbstractArrayTransitionProbability <: AbstractTransitionProbability
 
 
 
@@ -33,9 +33,9 @@ abstract AbstractTransitionProbabilityArray <: AbstractTransitionProbability
 # Base functions
 # --------------
 
-ndims(P::AbstractTransitionProbabilityArray) = ndims(P.array)
-size(P::AbstractTransitionProbabilityArray) = size(P.array)
-size(P::AbstractTransitionProbabilityArray, dims...) = size(P.array, dims...)
+ndims(P::AbstractArrayTransitionProbability) = ndims(P.array)
+size(P::AbstractArrayTransitionProbability) = size(P.array)
+size(P::AbstractArrayTransitionProbability, dims...) = size(P.array, dims...)
 
 
 
@@ -43,27 +43,27 @@ size(P::AbstractTransitionProbabilityArray, dims...) = size(P.array, dims...)
 # Array type
 # ----------
 
-immutable TransitionProbabilityArray{T<:Real} <: AbstractTransitionProbabilityArray
+immutable ArrayTransitionProbability{T<:Real} <: AbstractArrayTransitionProbability
     array::Array{T,3}
 
-    function TransitionProbabilityArray(array::Array{T,3})
+    function ArrayTransitionProbability(array::Array{T,3})
         is_square_stochastic(array) || error("Not valid transition probability.")
         new(array)
     end
 end
 
-TransitionProbabilityArray{T}(array::Array{T,3}) = TransitionProbabilityArray{T}(array)
+ArrayTransitionProbability{T}(array::Array{T,3}) = ArrayTransitionProbability{T}(array)
 
 
-TransitionProbability{T}(A::Array{T,3}) = TransitionProbabilityArray(A)
+TransitionProbability{T}(A::Array{T,3}) = ArrayTransitionProbability(A)
 
 
-num_actions(P::TransitionProbabilityArray) = size(P, 3)
+num_actions(P::ArrayTransitionProbability) = size(P, 3)
 
-num_states(P::TransitionProbabilityArray) = size(P, 1)
+num_states(P::ArrayTransitionProbability) = size(P, 1)
 
 
-getindex(P::TransitionProbabilityArray, dims...) = getindex(P.array, dims...)
+getindex(P::ArrayTransitionProbability, dims...) = getindex(P.array, dims...)
 
 
 @doc """
@@ -73,9 +73,9 @@ The probability of transitioning from state `s` to
 state `t` given that action `a` is taken.
 
 """ ->
-probability(P::TransitionProbabilityArray, s, t, a) = getindex(P, s, t, a)
+probability(P::ArrayTransitionProbability, s, t, a) = getindex(P, s, t, a)
 
-probability(P::TransitionProbabilityArray, a) = P[:, :, a]
+probability(P::ArrayTransitionProbability, a) = P[:, :, a]
 
 
 
@@ -83,24 +83,24 @@ probability(P::TransitionProbabilityArray, a) = P[:, :, a]
 # Sparse array type
 # -----------------
 
-immutable SparseTransitionProbabilityArray{Tv<:Real,Ti} <: AbstractTransitionProbabilityArray
+immutable SparseArrayTransitionProbability{Tv<:Real,Ti} <: AbstractArrayTransitionProbability
     array::Vector{SparseMatrixCSC{Tv,Ti}}
 end
 
 
 TransitionProbability{T<:SparseMatrixCSC}(A::Vector{T}) =
-    SparseTransitionProbabilityArray(A)
+    SparseArrayTransitionProbability(A)
 
 
-num_actions(P::SparseTransitionProbabilityArray) = length(P.array)
+num_actions(P::SparseArrayTransitionProbability) = length(P.array)
 
-num_states(P::SparseTransitionProbabilityArray) = size(getindex(P.array, 1), 1)
+num_states(P::SparseArrayTransitionProbability) = size(getindex(P.array, 1), 1)
 
 
-probability(P::SparseTransitionProbabilityArray, s, t, a) =
+probability(P::SparseArrayTransitionProbability, s, t, a) =
     getindex(getindex(P.array, a), s, t)
 
-probability(P::SparseTransitionProbabilityArray, a) = getindex(P.array, a)
+probability(P::SparseArrayTransitionProbability, a) = getindex(P.array, a)
 
 
 

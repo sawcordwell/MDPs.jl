@@ -18,10 +18,10 @@ export # MDP types
 
        # transition probability types
        AbstractTransitionProbability,
-       AbstractTransitionProbabilityArray,
-       SparseTransitionProbabilityArray,
+       AbstractArrayTransitionProbability,
+       ArrayTransitionProbability,
+       SparseArrayTransitionProbability,
        TransitionProbability,  # constructor helper
-       TransitionProbabilityArray,
 
        # reward types
        AbstractReward,
